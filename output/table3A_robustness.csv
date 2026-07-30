@@ -1,0 +1,5 @@
+"","main_est","main_se","conttime_est","conttime_se","countryfe_est","countryfe_se","both_est","both_se"
+"weighted_position",0.265,0.061,0.263,0.061,0.295,0.068,0.295,0.068
+"weighted_eu_position",0.272,0.076,0.276,0.076,0.275,0.089,0.279,0.089
+"post_chatgpt",-0.633,0.193,NA,NA,-0.649,0.2,NA,NA
+"year_centered",NA,NA,-0.16,0.051,NA,NA,-0.162,0.054

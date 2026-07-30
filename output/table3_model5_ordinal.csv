@@ -1,0 +1,9 @@
+"term","estimate","se","p_value"
+"weighted_position",0.265,0.061,1.24212676195162e-05
+"weighted_eu_position",0.272,0.076,0.000335525014936405
+"country_ai_attitudeAI-Optimistic Countries",0.512,0.265,0.0532373927581838
+"country_ai_attitudeAI-Pessimistic Countries",-0.106,0.409,0.796120684371891
+"post_chatgpt_factorPost-ChatGPT",-0.633,0.193,0.00106803654386686
+"topic_digital_economy",1.412,0.333,2.17428966331894e-05
+"topic_education",-0.139,0.34,0.68141102091454
+"topic_social_impacts",0.036,0.385,0.92611171850314
