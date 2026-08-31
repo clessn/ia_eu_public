@@ -30,9 +30,10 @@ From the root of the repository:
 ```bash
 Rscript code/00_run_all.R
 Rscript validation/validate.R
+Rscript validation/check_output_drift.R
 ```
 
-The first command runs the thirteen analysis scripts in order and prints the main quantities each one produces. The second compares those outputs against the values reported in the article and prints PASS or FAIL for each one. Everything is written to `output/`.
+The first command runs the thirteen analysis scripts in order and prints the main quantities each one produces. The second compares those outputs against the values reported in the article and prints PASS or FAIL for each one. The third confirms that the CSVs committed to this repository still match what the pipeline produces, comparing numerically rather than byte for byte, since the last digits of a LAPACK result differ between machines. Everything is written to `output/`.
 
 Scripts can also be run individually in numerical order. Scripts 04, 05, 07 and 09 need `output/df_complete_h1.rds`, which `01_build_analysis_dataset.R` creates. The others read directly from `data/`.
 

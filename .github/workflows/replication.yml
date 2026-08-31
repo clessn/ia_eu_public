@@ -39,16 +39,12 @@ jobs:
       - name: Validate every reported number
         run: Rscript validation/validate.R
 
-      # Only the CSVs are compared. PNGs and RDS files carry rendering and
-      # serialisation details that differ between machines even when the
-      # numbers behind them are identical.
+      # Only the CSVs are compared, and numerically rather than byte for byte.
+      # PNGs and RDS files carry rendering and serialisation details that differ
+      # between machines even when the numbers behind them are identical, and
+      # the last digits of a LAPACK result do the same.
       - name: Confirm no tabular output drifted
-        run: |
-          if ! git diff --quiet -- 'output/*.csv'; then
-            echo "Regenerated tables differ from the committed ones:"
-            git diff --stat -- 'output/*.csv'
-            exit 1
-          fi
+        run: Rscript validation/check_output_drift.R
 
       - uses: actions/upload-artifact@v4
         if: always()
