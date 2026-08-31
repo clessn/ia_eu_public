@@ -46,6 +46,12 @@ preds <- predictions(model5, newdata = pred_data, conf_level = 0.95) %>%
     Perception = factor(Perception, levels = c("Pessimist", "Mixed/Realist", "Optimist"))
   )
 
+# Written at six significant digits. The full double precision R carries
+# here varies in its last digits with the BLAS the machine happens to use,
+# which makes the committed outputs impossible to compare byte for byte
+# across platforms. Six digits is far beyond anything the article reports.
+preds[c("estimate", "conf.low", "conf.high")] <-
+  lapply(preds[c("estimate", "conf.low", "conf.high")], signif, digits = 6)
 write.csv(preds[, c("weighted_position", "Perception", "estimate", "conf.low", "conf.high")],
           "output/figure4_predicted_probabilities.csv", row.names = FALSE)
 

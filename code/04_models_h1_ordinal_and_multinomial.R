@@ -81,6 +81,11 @@ print(table1A_full_coefficients)
 # --- Proportional odds assumption (Brant test on the full specification) ---
 brant5 <- brant(model5)
 brant_df <- as.data.frame(brant5)
+# Written at six significant digits. The full double precision R carries
+# here varies in its last digits with the BLAS the machine happens to use,
+# which makes the committed outputs impossible to compare byte for byte
+# across platforms. Six digits is far beyond anything the article reports.
+brant_df[] <- lapply(brant_df, function(x) if (is.numeric(x)) signif(x, 6) else x)
 write.csv(brant_df, "output/brant_test_model5.csv")
 print(brant_df)
 
@@ -110,6 +115,7 @@ table3 <- data.frame(
   se = round(sqrt(diag(vcov(model5)))[names(coef(model5))], 3)
 )
 table3$p_value <- 2 * pnorm(-abs(coef(model5) / sqrt(diag(vcov(model5)))[names(coef(model5))]))
+table3$p_value <- signif(table3$p_value, 6)
 write.csv(table3, "output/table3_model5_ordinal.csv", row.names = FALSE)
 cat("\nTable 3 (Model 5, ordinal):\n"); print(table3)
 cat(sprintf("AIC = %.1f, BIC = %.1f, N = %d\n", AIC(model5), BIC(model5), nrow(df_complete)))
