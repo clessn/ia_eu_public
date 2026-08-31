@@ -15,13 +15,18 @@
 # Regression coefficients and predicted probabilities are computed through
 # LAPACK, whose last significant digits differ between machines, so a byte
 # comparison reports a failure on any machine other than the one that happened
-# to generate the committed file. A drift large enough to matter is a drift
-# well above 1e-6.
+# to generate the committed file.
+#
+# The tolerance has to sit above one unit in the last digit the CSVs actually
+# store. Those are written at six significant digits, so a value near 0.5 that
+# falls on a rounding boundary can shift by 1e-6 between machines without
+# anything having changed. 1e-5 clears that while staying two orders of
+# magnitude tighter than the two and three decimal places the article reports.
 #
 # Exits 1 if any committed CSV no longer matches a fresh run.
 # ================================================================================
 
-TOL <- 1e-6
+TOL <- 1e-5
 
 files <- sort(Sys.glob("output/*.csv"))
 if (length(files) == 0) stop("No output CSVs found. Run code/00_run_all.R first.")
