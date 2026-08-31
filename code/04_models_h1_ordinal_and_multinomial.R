@@ -1,6 +1,10 @@
 # ================================================================================
 # 04_models_h1_ordinal_and_multinomial.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Estimates the five nested ordinal logistic regression models testing
 # Hypotheses 1 and 1b, tests the proportional odds assumption (Brant test),
 # and estimates the multinomial robustness check.
@@ -25,6 +29,13 @@ if (!dir.exists("output")) dir.create("output")
 
 df_complete <- readRDS("output/df_complete_h1.rds")
 
+# The corpus carries a `term` column (the parliamentary term, 8 to 10) that no
+# model here uses. marginaleffects builds its own `term` column internally, and
+# on some versions the collision makes predictions() fail downstream in
+# 05_figure4_predicted_probabilities.R. Dropping it keeps the data frame that
+# script reads unambiguous.
+df_complete$term <- NULL
+
 model1 <- polr(perception_ordered ~ weighted_position, data = df_complete, Hess = TRUE)
 model2 <- polr(perception_ordered ~ weighted_position + weighted_eu_position, data = df_complete, Hess = TRUE)
 model3 <- polr(perception_ordered ~ weighted_position + weighted_eu_position + country_ai_attitude,
@@ -44,6 +55,28 @@ table1A <- data.frame(
 )
 write.csv(table1A, "output/table1A_nested_ordinal_models.csv", row.names = FALSE)
 print(table1A)
+
+# --- Table 1A: the coefficients themselves, not just the fit statistics ---
+# The appendix prints a coefficient for every predictor in each of the five
+# nested models. Reproducing the AIC and BIC alone leaves the body of that
+# table unchecked, so the estimates, standard errors and p-values are written
+# out here in long form, one row per model and term.
+table1A_full_coefficients <- do.call(rbind, lapply(seq_along(models), function(i) {
+  ct <- coef(summary(models[[i]]))
+  data.frame(
+    model = paste0("Model ", i),
+    term = rownames(ct),
+    estimate = round(ct[, "Value"], 3),
+    std_error = round(ct[, "Std. Error"], 3),
+    t_value = round(ct[, "t value"], 3),
+    p_value = round(2 * pnorm(abs(ct[, "t value"]), lower.tail = FALSE), 4),
+    row.names = NULL
+  )
+}))
+write.csv(table1A_full_coefficients,
+          "output/table1A_full_coefficients.csv", row.names = FALSE)
+cat("\nTable 1A, full coefficients:\n")
+print(table1A_full_coefficients)
 
 # --- Proportional odds assumption (Brant test on the full specification) ---
 brant5 <- brant(model5)

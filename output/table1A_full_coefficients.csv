@@ -1,0 +1,31 @@
+"model","term","estimate","std_error","t_value","p_value"
+"Model 1","weighted_position",0.2,0.05,4.012,1e-04
+"Model 1","Pessimist|Mixed",0.324,0.29,1.119,0.263
+"Model 1","Mixed|Optimist",1.704,0.302,5.649,0
+"Model 2","weighted_position",0.288,0.057,5.072,0
+"Model 2","weighted_eu_position",0.267,0.073,3.667,2e-04
+"Model 2","Pessimist|Mixed",2.222,0.604,3.68,2e-04
+"Model 2","Mixed|Optimist",3.639,0.621,5.857,0
+"Model 3","weighted_position",0.295,0.057,5.166,0
+"Model 3","weighted_eu_position",0.26,0.073,3.547,4e-04
+"Model 3","country_ai_attitudeAI-Optimistic Countries",0.415,0.259,1.6,0.1096
+"Model 3","country_ai_attitudeAI-Pessimistic Countries",-0.247,0.397,-0.622,0.5341
+"Model 3","Pessimist|Mixed",2.266,0.605,3.748,2e-04
+"Model 3","Mixed|Optimist",3.692,0.623,5.93,0
+"Model 4","weighted_position",0.302,0.058,5.239,0
+"Model 4","weighted_eu_position",0.28,0.074,3.784,2e-04
+"Model 4","country_ai_attitudeAI-Optimistic Countries",0.476,0.26,1.829,0.0674
+"Model 4","country_ai_attitudeAI-Pessimistic Countries",-0.152,0.401,-0.38,0.7038
+"Model 4","post_chatgpt_factorPost-ChatGPT",-0.701,0.191,-3.676,2e-04
+"Model 4","Pessimist|Mixed",2.147,0.609,3.526,4e-04
+"Model 4","Mixed|Optimist",3.611,0.627,5.76,0
+"Model 5","weighted_position",0.265,0.061,4.37,0
+"Model 5","weighted_eu_position",0.272,0.076,3.586,3e-04
+"Model 5","country_ai_attitudeAI-Optimistic Countries",0.512,0.265,1.933,0.0532
+"Model 5","country_ai_attitudeAI-Pessimistic Countries",-0.106,0.409,-0.258,0.7961
+"Model 5","post_chatgpt_factorPost-ChatGPT",-0.633,0.193,-3.272,0.0011
+"Model 5","topic_digital_economy",1.412,0.333,4.246,0
+"Model 5","topic_education",-0.139,0.34,-0.411,0.6814
+"Model 5","topic_social_impacts",0.036,0.385,0.093,0.9261
+"Model 5","Pessimist|Mixed",2.041,0.644,3.168,0.0015
+"Model 5","Mixed|Optimist",3.558,0.662,5.375,0

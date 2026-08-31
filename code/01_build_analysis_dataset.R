@@ -1,6 +1,10 @@
 # ================================================================================
 # 01_build_analysis_dataset.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Loads the final coded corpus and builds the analysis-ready dataset used by
 # every regression model in the paper (Table 3, Table 4A appendix models,
 # Table B appendix multinomial, Table D appendix robustness, Figure 4).

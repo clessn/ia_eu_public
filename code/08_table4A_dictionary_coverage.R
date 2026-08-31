@@ -1,6 +1,10 @@
 # ================================================================================
 # 08_table4A_dictionary_coverage.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Reproduces Online Appendix Table 4A: number of AI-related interventions
 # matched by each of the seven dictionary terms used for corpus construction.
 #

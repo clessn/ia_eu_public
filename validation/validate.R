@@ -1,6 +1,10 @@
 # ================================================================================
 # validate.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Automated check: does every number this pipeline produces match the number
 # reported in the article? Run AFTER code/00_run_all.R
 # from the replication_package/ root directory:
@@ -91,6 +95,75 @@ check("Table 4 - Mixed total", tot_row("total", "Mixed"), 86)
 check("Table 4 - Optimist total", tot_row("total", "Optimist"), 67)
 check("Table 4 - Pessimist total", tot_row("total", "Pessimist"), 71)
 check("Table 4 - overall pro-regulation N", sum(t4$in_favor), 214)
+# The against/ambiguous counts and the percentages are checked as well. Before
+# the column-name collision in 06 was fixed, every against_or_ambiguous came
+# out as zero and every percentage as a hundred times too large, and none of
+# the assertions above caught it.
+check("Table 4 - Mixed against/ambiguous", tot_row("against_or_ambiguous", "Mixed"), 3)
+check("Table 4 - Optimist against/ambiguous", tot_row("against_or_ambiguous", "Optimist"), 6)
+check("Table 4 - Pessimist against/ambiguous", tot_row("against_or_ambiguous", "Pessimist"), 1)
+check("Table 4 - Mixed % pro-regulation", tot_row("pct_pro_reg", "Mixed"), 96.5, tol = 0.05)
+check("Table 4 - Optimist % pro-regulation", tot_row("pct_pro_reg", "Optimist"), 91.0, tol = 0.05)
+check("Table 4 - Pessimist % pro-regulation", tot_row("pct_pro_reg", "Pessimist"), 98.6, tol = 0.05)
+
+# The chi-square reported in the manuscript is recomputed here from the corpus
+# rather than taken from the text, since an earlier draft carried a value the
+# data no longer produced.
+h2 <- read.csv("data/ai_categorized_paragraphs_reconciled.csv", stringsAsFactors = FALSE)
+h2 <- h2[h2$is_mep == TRUE & !is.na(h2$Perception.regulation) &
+           h2$Perception.IA %in% c("Optimist", "Pessimist", "Mixed"), ]
+cs <- suppressWarnings(chisq.test(table(h2$Perception.IA, h2$Perception.regulation == "In favor")))
+check("Table 4 - chi-square statistic", round(as.numeric(cs$statistic), 2), 4.91, tol = 0.005)
+check("Table 4 - chi-square df", as.numeric(cs$parameter), 2)
+check("Table 4 - chi-square p", round(as.numeric(cs$p.value), 2), 0.09, tol = 0.005)
+
+## -- Table 1A: full nested-model coefficients -----------------------------------
+t1Af <- read.csv("output/table1A_full_coefficients.csv", stringsAsFactors = FALSE)
+coef1A <- function(m, term) t1Af$estimate[t1Af$model == m & t1Af$term == term]
+check("Table 1A - Model 1 position", coef1A("Model 1", "weighted_position"), 0.200, tol = 0.001)
+check("Table 1A - Model 2 position", coef1A("Model 2", "weighted_position"), 0.288, tol = 0.001)
+check("Table 1A - Model 3 position", coef1A("Model 3", "weighted_position"), 0.295, tol = 0.001)
+check("Table 1A - Model 4 position", coef1A("Model 4", "weighted_position"), 0.302, tol = 0.001)
+check("Table 1A - Model 5 position", coef1A("Model 5", "weighted_position"), 0.265, tol = 0.001)
+check("Table 1A - Model 2 EU integration", coef1A("Model 2", "weighted_eu_position"), 0.267, tol = 0.001)
+check("Table 1A - Model 4 post-ChatGPT", coef1A("Model 4", "post_chatgpt_factorPost-ChatGPT"), -0.701, tol = 0.001)
+
+## -- Table 3A: national context rows --------------------------------------------
+check("Table 3A - main AI-optimistic country", t3A["ai_optimistic", "main_est"], 0.512, tol = 0.001)
+check("Table 3A - main AI-pessimistic country", t3A["ai_pessimistic", "main_est"], -0.106, tol = 0.001)
+check("Table 3A - cont. time AI-optimistic country", t3A["ai_optimistic", "conttime_est"], 0.474, tol = 0.001)
+check("Table 3A - cont. time AI-pessimistic country", t3A["ai_pessimistic", "conttime_est"], -0.130, tol = 0.001)
+
+## -- Figure 2: distribution of framing stances ----------------------------------
+f2 <- read.csv("output/figure2_perception_distribution.csv", stringsAsFactors = FALSE)
+f2n <- function(lab) f2$interventions[f2$label == lab]
+f2p <- function(lab) f2$pct[f2$label == lab]
+check("Figure 2 - Pessimist N", f2n("Pessimist"), 136)
+check("Figure 2 - Mixed/Realist N", f2n("Mixed/Realist"), 138)
+check("Figure 2 - Optimist N", f2n("Optimist"), 155)
+check("Figure 2 - Contextual N", f2n("Contextual"), 158)
+check("Figure 2 - total N", sum(f2$interventions), 587)
+check("Figure 2 - Optimist %", f2p("Optimist"), 26.4, tol = 0.05)
+check("Figure 2 - Contextual %", f2p("Contextual"), 26.9, tol = 0.05)
+
+## -- Figure 3: framing stance by parliamentary group ----------------------------
+f3 <- read.csv("output/figure3_perceptions_by_group.csv", stringsAsFactors = FALSE)
+f3v <- function(g, col) f3[[col]][f3$group_label == g]
+check("Figure 3 - EPP optimistic %", f3v("EPP", "pct_optimist"), 52.7, tol = 0.05)
+check("Figure 3 - Renew optimistic %", f3v("Renew", "pct_optimist"), 40.0, tol = 0.05)
+check("Figure 3 - ID optimistic %", f3v("ID", "pct_optimist"), 37.5, tol = 0.05)
+check("Figure 3 - Greens/EFA pessimistic %", f3v("Greens/EFA", "pct_pessimist"), 61.5, tol = 0.05)
+check("Figure 3 - S&D pessimistic %", f3v("S&D", "pct_pessimist"), 43.7, tol = 0.05)
+check("Figure 3 - ECR pessimistic %", f3v("ECR", "pct_pessimist"), 40.5, tol = 0.05)
+
+## -- Figure 2A: annual counts by framing stance ---------------------------------
+f2A <- read.csv("output/figure2A_temporal_perceptions.csv", stringsAsFactors = FALSE)
+f2Av <- function(panel, yr) f2A$interventions[f2A$panel == panel & f2A$year == yr]
+check("Figure 2A - Pessimist 2022", f2Av("Pessimist", 2022), 23)
+check("Figure 2A - Pessimist 2024", f2Av("Pessimist", 2024), 35)
+check("Figure 2A - Optimist 2022", f2Av("Optimist", 2022), 18)
+check("Figure 2A - Optimist 2024", f2Av("Optimist", 2024), 13)
+check("Figure 2A - total N", sum(f2A$interventions), 587)
 
 ## -- Table 4A: dictionary coverage ----------------------------------------------
 t4A <- read.csv("output/table4A_dictionary_coverage.csv", stringsAsFactors = FALSE)

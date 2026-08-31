@@ -1,6 +1,10 @@
 # ================================================================================
 # 00_run_all.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Runs the full replication pipeline in order. Run from the
 # replication_package/ root directory:
 #
@@ -22,7 +26,10 @@ scripts <- c(
   "code/07_table3A_robustness.R",
   "code/08_table4A_dictionary_coverage.R",
   "code/09_figure1A_frames_by_group_period.R",
-  "code/10_figure1_temporal_volume.R"
+  "code/10_figure1_temporal_volume.R",
+  "code/11_figure2_perception_distribution.R",
+  "code/12_figure3_perceptions_by_group.R",
+  "code/13_figure2A_temporal_perceptions.R"
 )
 
 for (s in scripts) {

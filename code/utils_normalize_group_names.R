@@ -1,3 +1,9 @@
+# utils_normalize_group_names.R
+#
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Shared utility: normalize parliamentary group name casing.
 #
 # The source export records parliamentary group names inconsistently in case

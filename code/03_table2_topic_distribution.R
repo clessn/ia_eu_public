@@ -1,6 +1,10 @@
 # ================================================================================
 # 03_table2_topic_distribution.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Reproduces Table 2 (Distribution of AI Topics by Parliamentary Group).
 #
 # Input:  data/ai_categorized_paragraphs_reconciled.csv

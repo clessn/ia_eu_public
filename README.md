@@ -3,7 +3,7 @@
 **AI Politics and Regulation in the European Parliament: Ideological Divides and Policy Convergence amid Generative AI's Ascent**
 *European Union Politics*
 
-This repository reproduces every table, figure and reported statistic in the article from the coded corpus of parliamentary interventions. A validation script checks each reproduced result against the value printed in the article, and all 53 checks currently pass.
+This repository reproduces every table, figure and reported statistic in the article from the coded corpus of parliamentary interventions. A validation script checks each reproduced result against the value printed in the article, and all 91 checks currently pass.
 
 An earlier version of this package accompanied the first submission. It predates the addition of EU integration position to the models and the removal of speaker gender, so it no longer reproduces the published results. It has been removed to avoid confusion.
 
@@ -32,9 +32,11 @@ Rscript code/00_run_all.R
 Rscript validation/validate.R
 ```
 
-The first command runs the ten analysis scripts in order and prints the main quantities each one produces. The second compares those outputs against the values reported in the article and prints PASS or FAIL for each one. Everything is written to `output/`.
+The first command runs the thirteen analysis scripts in order and prints the main quantities each one produces. The second compares those outputs against the values reported in the article and prints PASS or FAIL for each one. Everything is written to `output/`.
 
 Scripts can also be run individually in numerical order. Scripts 04, 05, 07 and 09 need `output/df_complete_h1.rds`, which `01_build_analysis_dataset.R` creates. The others read directly from `data/`.
+
+Continuous integration runs both commands from a clean checkout on every push, so a green badge on the repository means the package still reproduces the article.
 
 ## Data
 
@@ -52,23 +54,28 @@ Scripts can also be run individually in numerical order. Scripts 04, 05, 07 and 
 | `01_build_analysis_dataset.R` | Sample construction, N = 666 down to 429 |
 | `02_table1_group_distribution.R` | Table 1 |
 | `03_table2_topic_distribution.R` | Table 2 |
-| `04_models_h1_ordinal_and_multinomial.R` | Table 3, Online Appendix Tables 1A and 2A, Brant test |
+| `04_models_h1_ordinal_and_multinomial.R` | Table 3, Online Appendix Tables 1A and 2A (including the full nested coefficients), Brant test |
 | `05_figure4_predicted_probabilities.R` | Figure 4 |
 | `06_table4_h2_regulation_consensus.R` | Table 4 |
 | `07_table3A_robustness.R` | Online Appendix Table 3A |
 | `08_table4A_dictionary_coverage.R` | Online Appendix Table 4A |
 | `09_figure1A_frames_by_group_period.R` | Online Appendix Figure 1A |
 | `10_figure1_temporal_volume.R` | Figure 1 |
+| `11_figure2_perception_distribution.R` | Figure 2 |
+| `12_figure3_perceptions_by_group.R` | Figure 3 |
+| `13_figure2A_temporal_perceptions.R` | Online Appendix Figure 2A |
 
 `utils_normalize_group_names.R` is a helper sourced by several scripts rather than run on its own.
 
-## Two things worth knowing about the code
+## Three things worth knowing about the code
 
-Anyone comparing this code against our earlier working scripts will notice two deliberate changes.
+Anyone comparing this code against our earlier working scripts will notice three deliberate changes.
 
 The first concerns the choice between the ordinal and multinomial specifications. The Brant test on Model 5 returns an omnibus p of 0.0497, which rounds to the 0.050 reported in the article and sits exactly on the conventional threshold. Selecting the model with an `if (p < 0.05)` rule at runtime is unstable for that reason, since a difference of a few thousandths would switch the reported model and replace Figure 4 with a different plot. Section 3.4 of the article argues that the ordinal specification should be retained, because the two predictors of theoretical interest satisfy the proportional odds assumption comfortably (p = 0.71 and p = 0.26) and only one thematic control fails it. The code follows that argument, reporting the Brant test in full and then holding the ordinal model as the primary specification.
 
 The second concerns parliamentary group names, which the source export records with inconsistent capitalisation across scraping batches, for instance "Group Of The..." against "Group of the...". Grouping or joining on the raw strings splits each group across its variants, so that the EPP's 167 interventions break into a group of 148 and another of 19. Every group-level operation here normalises case first.
+
+The third concerns an unused column. The coded corpus carries `term`, the parliamentary term in which an intervention was made. No model here uses it, but `marginaleffects` builds a column of the same name internally, and on some versions of that package the collision makes `predictions()` fail when Figure 4 is drawn. Scripts 04 and 05 drop the column after reading the data rather than leaving the result dependent on which version happens to be installed.
 
 ## Where each number comes from
 

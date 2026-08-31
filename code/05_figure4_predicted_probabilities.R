@@ -1,6 +1,10 @@
 # ================================================================================
 # 05_figure4_predicted_probabilities.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Reproduces Figure 4: predicted AI-framing probabilities across the
 # left-right spectrum, from the ordinal model (Table 3 / Model 5), holding
 # other variables at reference levels (AI-neutral country, pre-ChatGPT
@@ -18,6 +22,12 @@ if (!dir.exists("output")) dir.create("output")
 
 df_complete <- readRDS("output/df_complete_h1.rds")
 model5 <- readRDS("output/model5_ordinal.rds")
+
+# See the note in 04_models_h1_ordinal_and_multinomial.R: the unused `term`
+# column (parliamentary term) collides with the column marginaleffects builds
+# internally, and on some versions of the package predictions() below fails
+# because of it.
+df_complete$term <- NULL
 
 pred_data <- expand.grid(
   weighted_position = seq(0, 10, by = 0.25),

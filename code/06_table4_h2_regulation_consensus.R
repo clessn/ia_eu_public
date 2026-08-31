@@ -1,6 +1,10 @@
 # ================================================================================
 # 06_table4_h2_regulation_consensus.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Reproduces Table 4 (AI Framing Stance and Regulatory Position Among MEPs)
 # and the chi-square test of association reported for Hypothesis 2.
 #
@@ -22,14 +26,19 @@ df_h2 <- df %>%
 cat(sprintf("N (H2 sample): %d (expected 224)\n", nrow(df_h2)))
 if (nrow(df_h2) != 224) stop("H2 sample size mismatch: expected N = 224.")
 
+# The logical flag is named favors_regulation rather than in_favor. summarise()
+# evaluates its arguments in order and each one sees the columns created before
+# it, so `in_favor = sum(in_favor)` would rebind the name to a scalar count and
+# the following `sum(!in_favor)` would negate that count instead of the flag,
+# returning zero for every group.
 table4 <- df_h2 %>%
-  mutate(in_favor = Perception.regulation == "In favor") %>%
+  mutate(favors_regulation = Perception.regulation == "In favor") %>%
   group_by(Perception.IA) %>%
   summarise(
-    in_favor = sum(in_favor),
-    against_or_ambiguous = sum(!in_favor),
+    in_favor = sum(favors_regulation),
+    against_or_ambiguous = sum(!favors_regulation),
     total = n(),
-    pct_pro_reg = round(100 * mean(in_favor), 1),
+    pct_pro_reg = round(100 * mean(favors_regulation), 1),
     .groups = "drop"
   ) %>%
   arrange(match(Perception.IA, c("Mixed", "Optimist", "Pessimist")))

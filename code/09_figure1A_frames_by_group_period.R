@@ -1,6 +1,10 @@
 # ================================================================================
 # 09_figure1A_frames_by_group_period.R
 #
+# AI Politics and Regulation in the European Parliament: Ideological Divides
+# and Policy Convergence amid Generative AI's Ascent
+# Etienne Proulx, Steve Jacob, Arnaud Beaule, Shannon Dinan, Yannick Dufresne
+#
 # Reproduces Online Appendix Figure 1A: distribution of evaluative AI frames
 # (Pessimist, Mixed/Realist, Optimist) by parliamentary group, split into
 # pre-ChatGPT (Feb 2014-Nov 2022) and post-ChatGPT (Dec 2022-Dec 2024).
@@ -55,13 +59,31 @@ plot_data <- frame_dist %>%
     group_label = factor(group_label, levels = pre_order)
   )
 
+# The published figure runs the groups along the x axis rather than flipped,
+# and prints the number of evaluative interventions behind each bar above it.
+# Both facets share the pre-ChatGPT ordering so a group keeps its position
+# across periods and the shift is readable across the panels.
+n_labels <- frame_dist %>%
+  mutate(group_label = factor(group_label, levels = pre_order),
+         label = paste0("n=", n))
+
 p <- ggplot(plot_data, aes(x = group_label, y = pct, fill = frame)) +
-  geom_col(position = "stack") +
+  geom_col(position = "stack", width = 0.75) +
+  geom_text(data = n_labels, aes(x = group_label, y = 104, label = label),
+            inherit.aes = FALSE, size = 3, colour = "grey30") +
   facet_wrap(~post_chatgpt_factor) +
-  scale_fill_manual(values = c("Pessimist" = "gray20", "Mixed/Realist" = "gray55", "Optimist" = "gray85")) +
-  coord_flip() +
-  labs(y = "% of evaluative interventions", x = NULL, fill = "AI Frame") +
-  theme_minimal(base_size = 12)
+  scale_fill_manual(values = c("Pessimist" = "gray10", "Mixed/Realist" = "gray50", "Optimist" = "gray80")) +
+  scale_y_continuous(labels = function(x) paste0(x, "%"), breaks = seq(0, 100, 25),
+                     limits = c(0, 108)) +
+  labs(x = "Political group", y = "Percentage of interventions", fill = "AI frame",
+       title = "AI framing by political group: Before and after ChatGPT",
+       subtitle = paste("Evaluative frames only (Pessimist, Mixed/Realist, Optimist).",
+                        "Groups ordered from most pessimistic to most optimistic in the pre-ChatGPT period.")) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom",
+        panel.grid.major.x = element_blank(),
+        plot.subtitle = element_text(colour = "grey30", size = 9))
 
 ggsave("output/figure1A_frames_by_group_period.png", p, width = 10, height = 6, dpi = 300, bg = "white")
 
