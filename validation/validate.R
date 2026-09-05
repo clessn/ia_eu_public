@@ -37,6 +37,27 @@ check("Table 1 - GUE/NGL N", t1$interventions[t1$Group == "GUE/NGL"], 32)
 check("Table 1 - ID N", t1$interventions[t1$Group == "ID"], 27)
 check("Table 1 - Patriots N", t1$interventions[t1$Group == "Patriots"], 3)
 
+# The counts alone were checked before, which is how a wrong denominator went
+# unnoticed: the percentages were computed over the 585 interventions in the
+# nine tabulated groups rather than the 587 in the corpus, so EPP read 28.5 and
+# S&D 24.1 against the 28.4 and 24.0 printed in the table.
+pct1 <- function(g) t1$pct_of_corpus[t1$Group == g]
+rat1 <- function(g) t1$repr_ratio[t1$Group == g]
+check("Table 1 - EPP % of corpus", pct1("EPP"), 28.4, tol = 0.05)
+check("Table 1 - S&D % of corpus", pct1("S&D"), 24.0, tol = 0.05)
+check("Table 1 - Renew % of corpus", pct1("Renew"), 13.8, tol = 0.05)
+check("Table 1 - ECR % of corpus", pct1("ECR"), 8.5, tol = 0.05)
+check("Table 1 - Greens/EFA % of corpus", pct1("Greens/EFA"), 7.2, tol = 0.05)
+check("Table 1 - NI % of corpus", pct1("NI"), 7.2, tol = 0.05)
+check("Table 1 - GUE/NGL % of corpus", pct1("GUE/NGL"), 5.5, tol = 0.05)
+check("Table 1 - ID % of corpus", pct1("ID"), 4.6, tol = 0.05)
+check("Table 1 - Patriots % of corpus", pct1("Patriots"), 0.5, tol = 0.05)
+check("Table 1 - EPP repr. ratio", rat1("EPP"), 0.93, tol = 0.005)
+check("Table 1 - S&D repr. ratio", rat1("S&D"), 0.98, tol = 0.005)
+check("Table 1 - Renew repr. ratio", rat1("Renew"), 1.59, tol = 0.005)
+check("Table 1 - NI repr. ratio", rat1("NI"), 2.06, tol = 0.005)
+check("Table 1 - Patriots repr. ratio", rat1("Patriots"), 0.10, tol = 0.005)
+
 ## -- Table 2: topic distribution ---------------------------------------------
 t2 <- read.csv("output/table2_topic_distribution_totals.csv", stringsAsFactors = FALSE)
 row <- function(label) t2$n[t2$topic_label == label]

@@ -51,7 +51,13 @@ table1 <- df_meps %>%
   filter(!is.na(Group)) %>%
   count(Group, name = "interventions") %>%
   mutate(
-    pct_of_corpus = round(100 * interventions / sum(interventions), 1),
+    # Denominator is the full MEP corpus (587), not the sum of the nine
+    # tabulated groups (585). Two interventions come from groups too small
+    # to tabulate, one Europe of Freedom and Direct Democracy and one
+    # Europe of Sovereign Nations, and the shares reported in the article
+    # are shares of the whole corpus. Using sum(interventions) here gave
+    # EPP 28.5 and S&D 24.1 against the 28.4 and 24.0 in the table.
+    pct_of_corpus = round(100 * interventions / 587, 1),
     pct_of_ep_seats = seats_pct[Group],
     repr_ratio = round(pct_of_corpus / pct_of_ep_seats, 2)
   ) %>%

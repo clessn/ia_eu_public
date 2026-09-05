@@ -31,6 +31,22 @@ TOL <- 1e-5
 files <- sort(Sys.glob("output/*.csv"))
 if (length(files) == 0) stop("No output CSVs found. Run code/00_run_all.R first.")
 
+# `git show HEAD:output/x.csv` resolves relative to the current directory inside
+# whatever repository encloses it. Run from a working copy nested in a larger
+# repo, that silently picks up a same-named file from the parent project rather
+# than reporting nothing to compare against. Refuse to run unless this directory
+# is the root of the repository that tracks these files.
+prefix <- suppressWarnings(system2("git", c("rev-parse", "--show-prefix"),
+                                   stdout = TRUE, stderr = FALSE))
+if (length(prefix) == 0 || !nzchar(prefix[1])) {
+  # empty prefix means we are at the repository root, which is what we want
+} else {
+  cat(sprintf("Skipped: this is '%s' inside a larger repository, so the committed\n",
+              sub("/$", "", prefix[1])))
+  cat("versions cannot be resolved. Run from the root of clessn/ia_eu_public.\n")
+  quit(status = 0)
+}
+
 problems <- character()
 
 for (f in files) {
